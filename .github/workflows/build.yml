@@ -10,7 +10,7 @@ on:
         type: choice
         default: 'none'
         options:
-          - 'resukisu'
+          - 'kernelsu-next'
           - 'none'
       susfs_enable:
         description: 'SUSFS mount/root hiding (only takes effect when KernelSU is enabled above)（SUSFS 挂载/root 隐藏；仅当上方 KernelSU 开启时生效）'
