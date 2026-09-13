@@ -415,7 +415,7 @@ jobs:
             echo "BUILD_HOST=${{ inputs.build_host }}" >> "$GITHUB_ENV"
             # KSU version attribution (REPO_NAME)
             if [ "${{ inputs.ksu_type }}" != "none" ]; then
-              sed -i "s/^REPO_NAME := .*/REPO_NAME := ${{ inputs.build_user }}/" work/src/KernelSU/kernel/Kbuild
+              sed -i "s/^REPO_NAME := .*/REPO_NAME := ${{ inputs.build_user }}/" work/src/KernelSU-Next/kernel/Kbuild
             fi
           else
             echo "BUILD_USER=" >> "$GITHUB_ENV"
