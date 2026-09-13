@@ -5,7 +5,7 @@ on:
     inputs:
       # ---------- KernelSU ----------
       ksu_type:
-        description: 'KernelSU variant (resukisu = built-in KSU, none = no KSU)（KernelSU 类型：resukisu = 内建 KSU，none = 无 KSU）'
+        description: 'KernelSU variant (resukisu = built-in KSU, none = no KSU)（KernelSU 类型：kernelsu-next = 内建 KSU，none = 无 KSU）'
         required: true
         type: choice
         default: 'none'
