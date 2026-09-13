@@ -386,11 +386,11 @@ jobs:
           set -e
           cd work/src
           case "${{ inputs.ksu_type }}" in
-            resukisu) KSU_REPO="https://github.com/ReSukiSU/ReSukiSU.git" ;;
+            resukisu) KSU_REPO="https://github.com/KernelSU-Next/KernelSU-Next.git" ;;
             none)     echo "no KSU"; exit 0 ;;
           esac
           rm -rf KernelSU drivers/kernelsu
-          git clone "$KSU_REPO" KernelSU
+          git clone "$KSU_REPO" --branch next --depth 1 KernelSU
           ln -sfn ../KernelSU/kernel drivers/kernelsu
           grep -q "kernelsu" drivers/Makefile || echo 'obj-$(CONFIG_KSU) += kernelsu/' >> drivers/Makefile
           grep -q "drivers/kernelsu/Kconfig" drivers/Kconfig || \
@@ -412,11 +412,11 @@ jobs:
       - name: 🔧 Apply SUSFS KSU adaptation（应用 SUSFS KSU 适配）
         if: ${{ inputs.susfs_enable && inputs.ksu_type != 'none' }}
         run: |
+          set -e
           cd KernelSU
-          git apply --check $GITHUB_WORKSPACE/patches/02_ksu.patch 2>/dev/null && git apply $GITHUB_WORKSPACE/patches/02_ksu.patch \
-            || echo "WARN: 02_ksu.patch not applied automatically (KSU version may have changed)" >&2
+          git apply --check "$GITHUB_WORKSPACE/patches/02_ksu.patch"
+          git apply "$GITHUB_WORKSPACE/patches/02_ksu.patch"
         working-directory: work/src
-
       # ---------- Attribution ----------
       - name: ✍️ Configure attribution（配置署名）
         run: |
