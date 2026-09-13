@@ -386,7 +386,7 @@ jobs:
           set -e
           cd work/src
           case "${{ inputs.ksu_type }}" in
-            resukisu) KSU_REPO="https://github.com/KernelSU-Next/KernelSU-Next.git" ;;
+            kernelsu-next) KSU_REPO="https://github.com/KernelSU-Next/KernelSU-Next.git" ;;
             none)     echo "no KSU"; exit 0 ;;
           esac
           rm -rf KernelSU drivers/kernelsu
