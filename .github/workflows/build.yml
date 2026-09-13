@@ -393,7 +393,7 @@ jobs:
         id: ksu_version
         if: ${{ inputs.ksu_type != 'none' }}
         run: |
-          COUNT=$(git -C work/src/KernelSU rev-list --count HEAD)
+          COUNT=$(git -C work/src/KernelSU-Next rev-list --count HEAD)
           VER=$((30000 + COUNT + 700))
           echo "ksuver=$VER" >> "$GITHUB_OUTPUT"
           echo "KSU version: $VER ($COUNT commits)"
