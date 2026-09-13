@@ -545,7 +545,7 @@ jobs:
         if: ${{ !inputs.debug_skip_build }}
         run: |
           cd work/src
-          strings arch/arm64/boot/Image | grep -q "Linux version 6.6.139" || exit 1
+          strings arch/arm64/boot/Image | grep -q "Linux version 6.6.142" || exit 1
           # real kernel identity from the build artifacts: kernel.release +
           # compile info. On this tree UTS_VERSION lives in utsversion.h
           # (compile.h only has UTS_MACHINE/BY/HOST/COMPILER), so the old
