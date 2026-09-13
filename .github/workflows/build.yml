@@ -385,18 +385,8 @@ jobs:
         run: |
           set -e
           cd work/src
-          case "${{ inputs.ksu_type }}" in
-            kernelsu-next) KSU_REPO="https://github.com/KernelSU-Next/KernelSU-Next.git" ;;
-            none)     echo "no KSU"; exit 0 ;;
-          esac
           rm -rf KernelSU drivers/kernelsu
-          git clone "$KSU_REPO" --branch next --depth 1 KernelSU
-          ln -sfn ../KernelSU/kernel drivers/kernelsu
-          grep -q "kernelsu" drivers/Makefile || echo 'obj-$(CONFIG_KSU) += kernelsu/' >> drivers/Makefile
-          grep -q "drivers/kernelsu/Kconfig" drivers/Kconfig || \
-            sed -i "/endmenu/i\source \"drivers/kernelsu/Kconfig\"" drivers/Kconfig
-        env:
-          KSU_REPO: ""
+          curl -LSs "https://raw.githubusercontent.com/KernelSU-Next/KernelSU-Next/next/kernel/setup.sh" | bash -s stable
 
       # ---------- KSU version ----------
       - name: 🔢 Compute KSU version（计算 KSU 版本）
