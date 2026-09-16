@@ -409,7 +409,7 @@ jobs:
 
       # ---------- SUSFS KSU adaptation ----------
       - name: 🔧 Apply SUSFS KSU adaptation（应用 SUSFS KSU 适配）
-        if: ${{ inputs.susfs_enable && inputs.ksu_type != 'none' }}
+        if: ${{ inputs.susfs_enable && inputs.ksu_type == 'resukisu' }}
         run: |
           set -e
           cd KernelSU
