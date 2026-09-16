@@ -89,7 +89,7 @@ on:
         description: 'Attribution (build tags/KSU version/AK3)（署名（构建标签/KSU 版本/AK3））'
         required: true
         type: boolean
-        default: 'true'
+        default: 'false'
       build_user:
         description: 'Attribution user（署名用户）'
         required: false
