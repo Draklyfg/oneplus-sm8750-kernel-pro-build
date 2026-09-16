@@ -395,9 +395,8 @@ jobs:
         run: |
           set -e
           cd work/src
-          rm -rf KernelSU drivers/kernelsu
-          curl -LSs "https://raw.githubusercontent.com/KernelSU-Next/KernelSU-Next/next/kernel/setup.sh" | bash -s stable
-
+          rm -rf KernelSU-Next drivers/kernelsu
+          curl -LSs "https://raw.githubusercontent.com/pershoot/KernelSU-Next/dev-susfs/kernel/setup.sh" | bash -s dev-susfs
       # ---------- KSU version ----------
       - name: 🔢 Compute KSU version（计算 KSU 版本）
         id: ksu_version
