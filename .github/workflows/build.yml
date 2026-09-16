@@ -298,10 +298,9 @@ jobs:
         if: ${{ inputs.susfs_enable }}
         run: |
           set -e
-          git clone --depth 1 -b gki-android15-6.6 https://gitlab.com/simonpunk/susfs4ksu.git /tmp/susfs4ksu
-          cd work/src
+          git clone https://gitlab.com/simonpunk/susfs4ksu.git /tmp/susfs4ksu
+          cd /tmp/susfs4ksu && git checkout 937215c && cd -
           patch -p1 < /tmp/susfs4ksu/kernel_patches/50_add_susfs_in_gki-android15-6.6.patch
-          patch -p1 < /tmp/susfs4ksu/kernel_patches/60_scope-minimized_manual_hooks.patch
           cp /tmp/susfs4ksu/kernel_patches/fs/* fs/
           cp /tmp/susfs4ksu/kernel_patches/include/linux/* include/linux/
           
