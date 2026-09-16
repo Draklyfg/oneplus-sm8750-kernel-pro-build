@@ -300,6 +300,7 @@ jobs:
           set -e
           git clone https://gitlab.com/simonpunk/susfs4ksu.git /tmp/susfs4ksu
           cd /tmp/susfs4ksu && git checkout 937215c && cd -
+          cd work/src
           patch -p1 < /tmp/susfs4ksu/kernel_patches/50_add_susfs_in_gki-android15-6.6.patch
           cp /tmp/susfs4ksu/kernel_patches/fs/* fs/
           cp /tmp/susfs4ksu/kernel_patches/include/linux/* include/linux/
