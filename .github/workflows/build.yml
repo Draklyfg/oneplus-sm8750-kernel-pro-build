@@ -305,12 +305,12 @@ jobs:
           cp /tmp/susfs4ksu/kernel_patches/include/linux/* include/linux/
           
       - name: 🔧 Apply KSU hooks（应用 KSU 钩子）
-        if: ${{ inputs.susfs_enable && inputs.ksu_type != 'none' }}
+        if: ${{ inputs.susfs_enable && inputs.ksu_type == 'resukisu' }}
         run: patch -p1 -F3 --batch -f < $GITHUB_WORKSPACE/patches/split/00_ksu_hooks.patch
         working-directory: work/src
 
       - name: 🔧 Apply SUSFS main patch（应用 SUSFS 主补丁）
-        if: ${{ inputs.susfs_enable && inputs.ksu_type != 'none' }}
+        if: ${{ inputs.susfs_enable && inputs.ksu_type == 'resukisu' }}
         run: patch -p1 -F3 --batch -f < $GITHUB_WORKSPACE/patches/split/01_susfs_main.patch
         working-directory: work/src
 
