@@ -10,6 +10,7 @@ on:
         type: choice
         default: 'none'
         options:
+          - 'resukisu'
           - 'kernelsu-next'
           - 'none'
       susfs_enable:
@@ -294,13 +295,13 @@ jobs:
         run: patch -p1 -F3 --batch -f < $GITHUB_WORKSPACE/patches/split/07_compile_fixes.patch
         working-directory: work/src
         
-      - name: 🔧 Apply KSU hooks（应用 KSU 钩子）
-        if: ${{ inputs.susfs_enable && inputs.ksu_type == 'resukisu' }}
+      - name: 🔧 Apply KSU hooks（应用 KSU 钩子，已停用，改用统一 SUSFS 流程）
+        if: ${{ false }}
         run: patch -p1 -F3 --batch -f < $GITHUB_WORKSPACE/patches/split/00_ksu_hooks.patch
         working-directory: work/src
 
-      - name: 🔧 Apply SUSFS main patch（应用 SUSFS 主补丁）
-        if: ${{ inputs.susfs_enable && inputs.ksu_type == 'resukisu' }}
+      - name: 🔧 Apply SUSFS main patch（应用 SUSFS 主补丁，已停用，改用统一 SUSFS 流程）
+        if: ${{ false }}
         run: patch -p1 -F3 --batch -f < $GITHUB_WORKSPACE/patches/split/01_susfs_main.patch
         working-directory: work/src
 
@@ -385,8 +386,20 @@ jobs:
         run: |
           set -e
           cd work/src
-          rm -rf KernelSU-Next drivers/kernelsu
-          curl -LSs "https://raw.githubusercontent.com/pershoot/KernelSU-Next/dev-susfs/kernel/setup.sh" | bash -s dev-susfs
+          case "${{ inputs.ksu_type }}" in
+            resukisu)
+              rm -rf KernelSU drivers/kernelsu
+              git clone https://github.com/ReSukiSU/ReSukiSU.git KernelSU
+              ln -sfn ../KernelSU/kernel drivers/kernelsu
+              grep -q "kernelsu" drivers/Makefile || echo 'obj-$(CONFIG_KSU) += kernelsu/' >> drivers/Makefile
+              grep -q "drivers/kernelsu/Kconfig" drivers/Kconfig || \
+                sed -i "/endmenu/i\source \"drivers/kernelsu/Kconfig\"" drivers/Kconfig
+              ;;
+            kernelsu-next)
+              rm -rf KernelSU-Next drivers/kernelsu
+              curl -LSs "https://raw.githubusercontent.com/pershoot/KernelSU-Next/dev-susfs/kernel/setup.sh" | bash -s dev-susfs
+              ;;
+          esac
 
       - name: 🔧 Apply SUSFS kernel patches（应用 SUSFS 内核补丁）
         if: ${{ inputs.susfs_enable }}
@@ -404,14 +417,18 @@ jobs:
         id: ksu_version
         if: ${{ inputs.ksu_type != 'none' }}
         run: |
-          COUNT=$(git -C work/src/KernelSU-Next rev-list --count HEAD)
+          case "${{ inputs.ksu_type }}" in
+            resukisu) KSU_DIR=work/src/KernelSU ;;
+            kernelsu-next) KSU_DIR=work/src/KernelSU-Next ;;
+          esac
+          COUNT=$(git -C "$KSU_DIR" rev-list --count HEAD)
           VER=$((30000 + COUNT + 700))
           echo "ksuver=$VER" >> "$GITHUB_OUTPUT"
           echo "KSU version: $VER ($COUNT commits)"
 
       # ---------- SUSFS KSU adaptation ----------
-      - name: 🔧 Apply SUSFS KSU adaptation（应用 SUSFS KSU 适配）
-        if: ${{ inputs.susfs_enable && inputs.ksu_type == 'resukisu' }}
+      - name: 🔧 Apply SUSFS KSU adaptation（应用 SUSFS KSU 适配，已停用，改用统一 SUSFS 流程）
+        if: ${{ false }}
         run: |
           set -e
           cd KernelSU
@@ -426,7 +443,11 @@ jobs:
             echo "BUILD_HOST=${{ inputs.build_host }}" >> "$GITHUB_ENV"
             # KSU version attribution (REPO_NAME)
             if [ "${{ inputs.ksu_type }}" != "none" ]; then
-              sed -i "s/^REPO_NAME := .*/REPO_NAME := ${{ inputs.build_user }}/" work/src/KernelSU-Next/kernel/Kbuild
+              case "${{ inputs.ksu_type }}" in
+                resukisu) KSU_DIR=work/src/KernelSU ;;
+                kernelsu-next) KSU_DIR=work/src/KernelSU-Next ;;
+              esac
+              sed -i "s/^REPO_NAME := .*/REPO_NAME := ${{ inputs.build_user }}/" "$KSU_DIR/kernel/Kbuild"
             fi
           else
             echo "BUILD_USER=" >> "$GITHUB_ENV"
