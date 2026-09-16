@@ -293,7 +293,17 @@ jobs:
       - name: 🔧 Apply compile fixes（应用编译修复补丁）
         run: patch -p1 -F3 --batch -f < $GITHUB_WORKSPACE/patches/split/07_compile_fixes.patch
         working-directory: work/src
-
+        
+      - name: 🔧 Apply SUSFS kernel patches（应用 SUSFS 内核补丁）
+        if: ${{ inputs.susfs_enable }}
+        run: |
+          set -e
+          git clone --depth 1 -b gki-android15-6.6 https://gitlab.com/simonpunk/susfs4ksu.git /tmp/susfs4ksu
+          cd work/src
+          patch -p1 < /tmp/susfs4ksu/kernel_patches/50_add_susfs_in_gki-android15-6.6.patch
+          cp /tmp/susfs4ksu/kernel_patches/fs/* fs/
+          cp /tmp/susfs4ksu/kernel_patches/include/linux/* include/linux/
+          
       - name: 🔧 Apply KSU hooks（应用 KSU 钩子）
         if: ${{ inputs.susfs_enable && inputs.ksu_type != 'none' }}
         run: patch -p1 -F3 --batch -f < $GITHUB_WORKSPACE/patches/split/00_ksu_hooks.patch
