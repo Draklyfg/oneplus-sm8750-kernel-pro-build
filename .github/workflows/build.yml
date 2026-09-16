@@ -374,9 +374,10 @@ jobs:
             cp -r patches/extra/include/uapi/linux/ntsync.h work/src/include/uapi/linux/
             cp -r patches/extra/drivers/gpu/drm/evdi work/src/drivers/gpu/drm/
           fi
-          # Baseband-guard new files
+          # Baseband-guard new files (fetch latest upstream instead of bundled snapshot)
           if [ "${{ inputs.baseband_guard }}" = "true" ]; then
-            cp -r patches/extra/Baseband-guard work/src/
+            rm -rf work/src/security/baseband-guard work/src/Baseband-guard
+            git clone --depth 1 https://github.com/vc-teahouse/Baseband-guard.git work/src/Baseband-guard
             ln -sfn ../Baseband-guard work/src/security/baseband-guard
           fi
 
