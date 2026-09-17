@@ -94,7 +94,7 @@ on:
         description: 'Attribution user（署名用户）'
         required: false
         type: string
-        default: 'Lingguang'
+        default: ''
       build_host:
         description: 'Attribution host（署名主机）'
         required: false
